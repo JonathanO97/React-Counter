@@ -27,6 +27,16 @@ handleIncrement = counter => {
     this.setState({sum: newSum});
 };
 
+handleDecrement = counter => { 
+  const counters = [...this.state.counters];
+  const index = counters.indexOf(counter);
+  counters[index] = {...counter};
+  counters[index].value--; 
+  const newSum = this.calculateSum(counters); 
+  this.setState({counters});
+  this.setState({sum: newSum}); 
+};
+
 handleReset = () => {
     const counters = this.state.counters.map(c => {
         c.value = 0;  
@@ -56,7 +66,8 @@ handleDelete = (counterId) => {
             onReset={this.handleReset} 
             onIncrement={this.handleIncrement} 
             onDelete={this.handleDelete}
-            onAdd={this.handleAdd}>
+            onAdd={this.handleAdd}
+            onDecrement={this.handleDecrement}>
           </Counters>
         </main>
       </React.Fragment>
@@ -66,7 +77,11 @@ handleDelete = (counterId) => {
   calculateSum(counters) {
     let sum = 0; 
     for(let i = 0; i < counters.length; i++) {
-      sum+= counters[i].value;
+      if(counters[i].value > 0) {
+        sum+= counters[i].value;
+      } else { 
+        counters[i].value = 0; 
+      }
     } 
     return sum; 
   }
