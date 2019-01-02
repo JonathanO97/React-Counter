@@ -22,20 +22,25 @@ handleIncrement = counter => {
     const index = counters.indexOf(counter); 
     counters[index] = {...counter};
     counters[index].value++;
+    const newSum = this.calculateSum(counters);
     this.setState({counters});
+    this.setState({sum: newSum});
 };
 
 handleReset = () => {
     const counters = this.state.counters.map(c => {
-        c.value = 0; 
+        c.value = 0;  
         return c; 
     })
     this.setState({counters});
+    this.setState({sum: 0});
 };
 
 handleDelete = (counterId) => {
     const counters = this.state.counters.filter(c => c.id !== counterId); 
+    const newSum = this.calculateSum(counters); 
     this.setState({counters});
+    this.setState({sum: newSum});
 };
 
   render() {
@@ -43,7 +48,7 @@ handleDelete = (counterId) => {
 
     return (
       <React.Fragment>
-        <NavBar totalCount={this.state.countSum}></NavBar>
+        <NavBar totalCount={this.state.sum}></NavBar>
         <main className="container">
         <h1>Add or Delete counters</h1>
           <Counters
@@ -58,6 +63,14 @@ handleDelete = (counterId) => {
     );
   }
   
+  calculateSum(counters) {
+    let sum = 0; 
+    for(let i = 0; i < counters.length; i++) {
+      sum+= counters[i].value;
+    } 
+    return sum; 
+  }
+
 }
 
 export default App;
