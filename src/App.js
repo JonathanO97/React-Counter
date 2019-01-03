@@ -6,15 +6,19 @@ import './App.css';
 class App extends Component {
 state = { 
     counters: [],
-    sum: 0
+    valueSum: 0,
+    counterSum: 0
 };
 
 handleAdd = () => {
   const counters = [...this.state.counters];
   const newId = counters.length + 1; 
-  const newCounter = {id: newId, value: 0}; 
+  const newCounter = {id: newId, value: 0};
+  let counterSum = this.state.counterSum;
+  counterSum++; 
   counters.push(newCounter);
   this.setState({counters});
+  this.setState({counterSum});
 }
 
 handleIncrement = counter => {
@@ -22,9 +26,9 @@ handleIncrement = counter => {
     const index = counters.indexOf(counter); 
     counters[index] = {...counter};
     counters[index].value++;
-    const newSum = this.calculateSum(counters);
+    const newValueSum = this.calculatevalueSum(counters);
     this.setState({counters});
-    this.setState({sum: newSum});
+    this.setState({valueSum: newValueSum});
 };
 
 handleDecrement = counter => { 
@@ -32,9 +36,9 @@ handleDecrement = counter => {
   const index = counters.indexOf(counter);
   counters[index] = {...counter};
   counters[index].value--; 
-  const newSum = this.calculateSum(counters); 
+  const newValueSum = this.calculatevalueSum(counters); 
   this.setState({counters});
-  this.setState({sum: newSum}); 
+  this.setState({valueSum: newValueSum}); 
 };
 
 handleReset = () => {
@@ -43,14 +47,18 @@ handleReset = () => {
         return c; 
     })
     this.setState({counters});
-    this.setState({sum: 0});
+    this.setState({valueSum: 0});
+    this.setState({counterSum: 0});
 };
 
 handleDelete = (counterId) => {
     const counters = this.state.counters.filter(c => c.id !== counterId); 
-    const newSum = this.calculateSum(counters); 
+    const newValueSum = this.calculatevalueSum(counters); 
+    let newCounterSum = this.state.counterSum;
+    newCounterSum--; 
     this.setState({counters});
-    this.setState({sum: newSum});
+    this.setState({valueSum: newValueSum});
+    this.setState({counterSum: newCounterSum});
 };
 
   render() {
@@ -58,7 +66,7 @@ handleDelete = (counterId) => {
 
     return (
       <React.Fragment>
-        <NavBar totalCount={this.state.sum}></NavBar>
+        <NavBar totalCount={this.state.valueSum} NumberOfCounters={this.state.counterSum}></NavBar>
         <main className="container">
         <h1>Add or Delete counters</h1>
           <Counters
@@ -74,16 +82,16 @@ handleDelete = (counterId) => {
     );
   }
   
-  calculateSum(counters) {
-    let sum = 0; 
+  calculatevalueSum(counters) {
+    let valueSum = 0; 
     for(let i = 0; i < counters.length; i++) {
       if(counters[i].value > 0) {
-        sum+= counters[i].value;
+        valueSum+= counters[i].value;
       } else { 
         counters[i].value = 0; 
       }
     } 
-    return sum; 
+    return valueSum; 
   }
 
 }
